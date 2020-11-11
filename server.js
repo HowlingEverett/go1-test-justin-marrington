@@ -1,6 +1,6 @@
 const express = require('express');
 
-const app = express();
+const app = require('./api');
 
 // Static asset serving for create-react-app client build, in prod only
 if (process.env.NODE_ENV === 'production') {
