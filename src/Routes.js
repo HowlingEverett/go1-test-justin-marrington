@@ -10,7 +10,7 @@ const Routes = () => (
     </Route>
 
     <Route exact path="/">
-      <EventsList />
+      <EventsList debounce={200} />
     </Route>
 
     <Route>

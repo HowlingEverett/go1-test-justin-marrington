@@ -17,7 +17,9 @@ const filterByTitle = (events, params) => {
 
   const filteredEvents =
     titleFilter !== undefined
-      ? mockEvents.filter((event) => event.Title.includes(titleFilter))
+      ? mockEvents.filter((event) =>
+          event.Title.toLowerCase().includes(titleFilter.toLowerCase())
+        )
       : mockEvents;
 
   return Promise.resolve(filteredEvents, params);

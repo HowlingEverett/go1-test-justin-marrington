@@ -6,34 +6,42 @@ import {
   setFetching,
   setError,
   setEvents,
+  setFilter,
 } from './events-store';
 import { fetchEvents } from '../../api';
+import TitleQueryField from './title-query-field';
 
-const EventsList = () => {
-  const [{ events, isFetching, error }, dispatch] = useReducer(
-    eventsReducer,
-    initialState
-  );
-
-  const fetchEventsData = async () => {
-    try {
-      dispatch(setFetching(true));
-      const fetchedEvents = await fetchEvents();
-      dispatch(setEvents(fetchedEvents));
-    } catch (e) {
-      dispatch(setError(e));
-    } finally {
-      dispatch(setFetching(false));
-    }
-  };
+const EventsList = ({ debounce }) => {
+  const [
+    { events = [], filters = {}, isFetching, error },
+    dispatch,
+  ] = useReducer(eventsReducer, initialState);
 
   useEffect(() => {
+    const fetchEventsData = async () => {
+      try {
+        dispatch(setFetching(true));
+        const fetchedEvents = await fetchEvents(filters);
+        dispatch(setEvents(fetchedEvents));
+      } catch (e) {
+        dispatch(setError(e));
+      } finally {
+        dispatch(setFetching(false));
+      }
+    };
+
     fetchEventsData();
-  }, [error]);
+  }, [filters]);
 
   return (
     <div>
       <h1>Events List</h1>
+
+      <TitleQueryField
+        debounce={debounce}
+        q={filters.q}
+        handleChange={(value) => dispatch(setFilter('q', value))}
+      />
 
       <div>
         {isFetching && <span>{'Loading events'}</span>}
