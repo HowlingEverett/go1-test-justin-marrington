@@ -6,13 +6,17 @@ const TitleQueryField = ({ q = '', handleChange = () => {}, debounce = 0 }) => {
   };
 
   return (
-    <DebounceInput
-      type="search"
-      value={q}
-      onChange={onChange}
-      minLength={2}
-      debounceTimeout={debounce}
-    />
+    <>
+      <label htmlFor="title-search">Title</label>
+      <DebounceInput
+        id="title-search"
+        type="search"
+        value={q}
+        onChange={onChange}
+        minLength={2}
+        debounceTimeout={debounce}
+      />
+    </>
   );
 };
 
