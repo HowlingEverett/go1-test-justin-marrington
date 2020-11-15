@@ -12,7 +12,7 @@ const renderWithRouter = (component, { route = '/' } = {}) => {
 test('Matches / route', () => {
   renderWithRouter(<Routes />, { route: '/' });
 
-  expect(screen.getByText('Events list')).toBeInTheDocument();
+  expect(screen.getByText('Events List')).toBeInTheDocument();
 });
 
 test('Matches an event detail route', () => {
