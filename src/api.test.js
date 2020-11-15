@@ -11,5 +11,5 @@ test('should fetch all events by default', async () => {
 
   const eventsResponse = await fetchEvents();
 
-  expect(eventsResponse.events).toEqual(MOCK_EVENTS);
+  expect(eventsResponse).toEqual(MOCK_EVENTS);
 });
