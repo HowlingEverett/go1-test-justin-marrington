@@ -15,6 +15,7 @@ const filterPipeline = (events, params) => {
 const filterByTitle = (events, params) => {
   const { q: titleFilter } = params;
 
+  // TODO: replace in-memory filtering with database query
   const filteredEvents =
     titleFilter !== undefined
       ? mockEvents.filter((event) =>
@@ -25,7 +26,7 @@ const filterByTitle = (events, params) => {
   return Promise.resolve(filteredEvents, params);
 };
 
-// TODO: implement location filter
+// TODO: implement geo-spatial location filter
 const filterByLocation = (events, params) => {
   return Promise.resolve(events, params);
 };

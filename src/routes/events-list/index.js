@@ -10,6 +10,7 @@ import {
 } from './events-store';
 import { fetchEvents } from '../../api';
 import TitleQueryField from './title-query-field';
+import LocationQueryField from './location-query-field';
 
 const EventsList = ({ debounce }) => {
   const [
@@ -22,7 +23,7 @@ const EventsList = ({ debounce }) => {
       try {
         dispatch(setFetching(true));
         const fetchedEvents = await fetchEvents(filters);
-        dispatch(setEvents(fetchedEvents));
+        dispatch(setEvents(fetchedEvents.events));
       } catch (e) {
         dispatch(setError(e));
       } finally {
@@ -41,6 +42,13 @@ const EventsList = ({ debounce }) => {
         debounce={debounce}
         q={filters.q}
         handleChange={(value) => dispatch(setFilter('q', value))}
+      />
+
+      <LocationQueryField
+        debounce={debounce}
+        handleAddressSelected={(address) =>
+          dispatch(setFilter('coordinates', address.coordinates.join(',')))
+        }
       />
 
       <div>
