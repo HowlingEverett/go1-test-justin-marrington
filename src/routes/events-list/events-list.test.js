@@ -1,7 +1,13 @@
+import { useReducer, useMemo } from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 
+import {
+  eventsReducer,
+  initialState,
+  EventsContext,
+} from '../../store/events-store';
 import MOCK_EVENTS from '../../../mock-data/events';
 import MOCK_CANDIDATES from '../../../mock-data/geocode-candidates';
 import EventsList from './';
@@ -47,8 +53,21 @@ beforeAll(() => apiServer.listen());
 afterEach(() => apiServer.resetHandlers());
 afterAll(() => apiServer.close());
 
+const ComponentUnderTest = () => {
+  const [state, dispatch] = useReducer(eventsReducer, initialState);
+  const contextValue = useMemo(() => {
+    return { state, dispatch };
+  }, [state, dispatch]);
+
+  return (
+    <EventsContext.Provider value={contextValue}>
+      <EventsList />
+    </EventsContext.Provider>
+  );
+};
+
 test('loads and displays default events', async () => {
-  render(<EventsList />);
+  render(<ComponentUnderTest />);
 
   await waitFor(() => screen.getByRole('list'));
 
@@ -63,7 +82,7 @@ test('loads and displays default events', async () => {
 });
 
 test('filters events by case-insensitive title filter', async () => {
-  render(<EventsList />);
+  render(<ComponentUnderTest />);
   const searchInput = screen.getByLabelText('Title');
 
   fireEvent.change(searchInput, { target: { value: '10 minute' } });
@@ -85,7 +104,7 @@ test('filters events by case-insensitive title filter', async () => {
 });
 
 test('filters events by selected address candidate', async () => {
-  render(<EventsList />);
+  render(<ComponentUnderTest />);
   const addressSearchInput = screen.getByLabelText(/Near address/);
 
   fireEvent.focus(addressSearchInput);
@@ -105,7 +124,7 @@ test('filters events by selected address candidate', async () => {
 });
 
 test('filters events by selected date range', async () => {
-  render(<EventsList />);
+  render(<ComponentUnderTest />);
   const startDateInput = screen.getByLabelText('Between Dates:');
   const endDateInput = screen.getByLabelText('And:');
 

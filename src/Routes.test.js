@@ -1,7 +1,26 @@
+import { useReducer, useMemo } from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import Routes from './Routes';
+import {
+  eventsReducer,
+  initialState,
+  EventsContext,
+} from './store/events-store';
+
+const ComponentUnderTest = () => {
+  const [state, dispatch] = useReducer(eventsReducer, initialState);
+  const contextValue = useMemo(() => {
+    return { state, dispatch };
+  }, [state, dispatch]);
+
+  return (
+    <EventsContext.Provider value={contextValue}>
+      <Routes />
+    </EventsContext.Provider>
+  );
+};
 
 const renderWithRouter = (component, { route = '/' } = {}) => {
   window.history.pushState({}, 'Test page', route);
@@ -10,19 +29,19 @@ const renderWithRouter = (component, { route = '/' } = {}) => {
 };
 
 test('Matches / route', () => {
-  renderWithRouter(<Routes />, { route: '/' });
+  renderWithRouter(<ComponentUnderTest />, { route: '/' });
 
   expect(screen.getByText('Events List')).toBeInTheDocument();
 });
 
 test('Matches an event detail route', () => {
-  renderWithRouter(<Routes />, { route: '/event/1' });
+  renderWithRouter(<ComponentUnderTest />, { route: '/event/1' });
 
   expect(screen.getByText('Event detail')).toBeInTheDocument();
 });
 
 test('Requires an event id in the detail route', () => {
-  renderWithRouter(<Routes />, { route: '/event' });
+  renderWithRouter(<ComponentUnderTest />, { route: '/event' });
 
   expect(screen.getByText(/this page doesn't exist/i)).toBeInTheDocument();
 });

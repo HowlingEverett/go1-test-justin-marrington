@@ -1,23 +1,22 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import {
-  eventsReducer,
-  initialState,
   setFetching,
   setError,
   setEvents,
   setFilter,
-} from './events-store';
+  EventsContext,
+} from '../../store/events-store';
 import { fetchEvents } from '../../api';
 import TitleQueryField from './title-query-field';
 import LocationQueryField from './location-query-field';
 import DateQueryFields from './date-query-fields';
 
 const EventsList = ({ debounce }) => {
-  const [
-    { events = [], filters = {}, isFetching, error },
+  const {
+    state: { filters, isFetching, events, error },
     dispatch,
-  ] = useReducer(eventsReducer, initialState);
+  } = useContext(EventsContext);
 
   useEffect(() => {
     const fetchEventsData = async () => {

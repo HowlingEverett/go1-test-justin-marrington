@@ -1,3 +1,5 @@
+import React from 'react';
+
 // Event type constants
 export const SET_EVENTS = 'EVENTS_LIST/SET_EVENTS';
 export const SET_ERROR = 'EVENTS_LIST/SET_ERROR';
@@ -52,6 +54,8 @@ export const eventsReducer = (state, action) => {
     }
   }
 };
+
+export const EventsContext = React.createContext();
 
 // Provide a valid default state structure on useReducer calls
 export const initialState = {
