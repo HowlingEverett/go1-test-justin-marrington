@@ -46,3 +46,16 @@ test('/api/events takes a query filter on event title', async () => {
   expect(res.body.events).toHaveLength(1);
   expect(titles).toEqual(['Morning Yoga Kickstart']);
 });
+
+test('/api/events takes a date range filter', async () => {
+  let res = await request(app)
+    .get('/api/events')
+    .query({
+      between: [new Date('2021-03-20'), new Date('2021-03-23')].join(','),
+    });
+
+  expect(res.body.events).toHaveLength(1);
+  expect(res.body.events[0].Title).toBe(
+    'Infection Prevention and Control (Australia)'
+  );
+});

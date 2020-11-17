@@ -4,10 +4,10 @@ const apiRoot = () => {
   return process.env.API_ROOT || `/api`;
 };
 
-export const fetchEvents = async ({ q, coordinates, timestamp } = {}) => {
+export const fetchEvents = async ({ q, coordinates, between } = {}) => {
   const eventsUrl = `${apiRoot()}/events`;
   const { data } = await axios.get(eventsUrl, {
-    params: { q, coordinates, timestamp },
+    params: { q, coordinates, between },
   });
   return data;
 };

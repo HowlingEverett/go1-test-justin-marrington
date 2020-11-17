@@ -11,6 +11,7 @@ import {
 import { fetchEvents } from '../../api';
 import TitleQueryField from './title-query-field';
 import LocationQueryField from './location-query-field';
+import DateQueryFields from './date-query-fields';
 
 const EventsList = ({ debounce }) => {
   const [
@@ -49,6 +50,10 @@ const EventsList = ({ debounce }) => {
         handleAddressSelected={(address) =>
           dispatch(setFilter('coordinates', address.coordinates.join(',')))
         }
+      />
+
+      <DateQueryFields
+        handleDateSelected={(dates) => dispatch(setFilter('between', dates))}
       />
 
       <div>
