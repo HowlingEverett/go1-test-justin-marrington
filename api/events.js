@@ -9,6 +9,12 @@ module.exports.list = async (req, res) => {
   res.json({ events: filteredEvents });
 };
 
+module.exports.show = async (req, res) => {
+  const event = mockEvents.find((e) => e.id === req.params.eventId);
+
+  res.json({ event });
+};
+
 const filterPipeline = ({ events, params = {} }) => {
   return filterByTitle({ events, params })
     .then(filterByLocation)

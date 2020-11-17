@@ -12,6 +12,12 @@ export const fetchEvents = async ({ q, coordinates, between } = {}) => {
   return data;
 };
 
+export const fetchEvent = async (eventId) => {
+  const eventUrl = `${apiRoot()}/events/${eventId}`;
+  const { data } = await axios.get(eventUrl);
+  return data;
+};
+
 export const geocode = async (addressFragment) => {
   const geocodeUrl = `${apiRoot()}/geocode`;
   const { data } = await axios.get(geocodeUrl, {

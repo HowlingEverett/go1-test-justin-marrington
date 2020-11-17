@@ -19,14 +19,6 @@ function App() {
     <Router>
       <EventsContext.Provider value={contextValue}>
         <div className="App">
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-            </ul>
-          </nav>
-
           <Routes />
         </div>
       </EventsContext.Provider>

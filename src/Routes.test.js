@@ -34,7 +34,7 @@ test('Matches / route', () => {
 test('Matches an event detail route', () => {
   renderWithRouter(<ComponentUnderTest />, { route: '/event/1' });
 
-  expect(screen.getByText('Event detail')).toBeInTheDocument();
+  expect(screen.getByText('Back to events')).toBeInTheDocument();
 });
 
 test('Requires an event id in the detail route', () => {
