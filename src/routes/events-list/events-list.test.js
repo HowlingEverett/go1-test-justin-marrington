@@ -1,4 +1,4 @@
-import { useReducer, useMemo } from 'react';
+import { useReducer } from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';

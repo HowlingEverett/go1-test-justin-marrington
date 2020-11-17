@@ -33,7 +33,7 @@ const EventDetail = () => {
     if (!activeEvent) {
       fetchEventData();
     }
-  }, [eventId, events]);
+  }, [eventId, events, activeEvent, dispatch]);
 
   return (
     <div title="event detail">
@@ -45,7 +45,7 @@ const EventDetail = () => {
         <>
           <h2>{activeEvent.Title}</h2>
 
-          <img url={activeEvent.Image} alt="Event detail image" />
+          <img url={activeEvent.Image} alt="Event detail" />
 
           <div title="event date">
             <strong>Event date: </strong>
