@@ -2,6 +2,7 @@ import { useReducer, useMemo } from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
+import { MemoryRouter } from 'react-router-dom';
 
 import {
   eventsReducer,
@@ -55,23 +56,23 @@ afterAll(() => apiServer.close());
 
 const ComponentUnderTest = () => {
   const [state, dispatch] = useReducer(eventsReducer, initialState);
-  const contextValue = useMemo(() => {
-    return { state, dispatch };
-  }, [state, dispatch]);
 
   return (
-    <EventsContext.Provider value={contextValue}>
-      <EventsList />
-    </EventsContext.Provider>
+    <MemoryRouter>
+      <EventsContext.Provider value={{ state, dispatch }}>
+        <EventsList />
+      </EventsContext.Provider>
+    </MemoryRouter>
   );
 };
 
 test('loads and displays default events', async () => {
   render(<ComponentUnderTest />);
 
-  await waitFor(() => screen.getByRole('list'));
+  await waitFor(() => screen.getByText('Loading events'));
+  await waitFor(() => screen.getByTitle('events'));
 
-  const eventItems = screen.getAllByRole('listitem');
+  const eventItems = screen.getAllByTitle('event-list-item');
   // Expect an entry for each event in the default list
   expect(eventItems).toHaveLength(8);
 
@@ -87,8 +88,8 @@ test('filters events by case-insensitive title filter', async () => {
 
   fireEvent.change(searchInput, { target: { value: '10 minute' } });
   await waitFor(() => screen.getByText('Loading events'));
-  await waitFor(() => screen.getByRole('list'));
-  let eventItems = screen.getAllByRole('listitem');
+  await waitFor(() => screen.getByTitle('events'));
+  let eventItems = screen.getAllByTitle('event-list-item');
 
   expect(eventItems).toHaveLength(2);
   expect(eventItems[0]).toHaveTextContent(/10 Minutes Managing Stress/);
@@ -96,8 +97,8 @@ test('filters events by case-insensitive title filter', async () => {
 
   fireEvent.change(searchInput, { target: { value: 'basics' } });
   await waitFor(() => screen.getByText('Loading events'));
-  await waitFor(() => screen.getByRole('list'));
-  eventItems = screen.getAllByRole('listitem');
+  await waitFor(() => screen.getByTitle('events'));
+  eventItems = screen.getAllByTitle('event-list-item');
 
   expect(eventItems).toHaveLength(1);
   expect(eventItems[0]).toHaveTextContent(/First Aid - Basics/);
@@ -114,8 +115,8 @@ test('filters events by selected address candidate', async () => {
   fireEvent.click(candidate);
 
   await waitFor(() => screen.getByText('Loading events'));
-  await waitFor(() => screen.getByRole('list'));
-  const eventItems = screen.getAllByRole('listitem');
+  await waitFor(() => screen.getByTitle('events'));
+  const eventItems = screen.getAllByTitle('event-list-item');
 
   expect(eventItems).toHaveLength(1);
   expect(eventItems[0]).toHaveTextContent(
@@ -135,8 +136,8 @@ test('filters events by selected date range', async () => {
   fireEvent.change(endDateInput, { target: { value: '23/03/2021' } });
 
   await waitFor(() => screen.getByText('Loading events'));
-  await waitFor(() => screen.getByRole('list'));
-  const eventItems = screen.getAllByRole('listitem');
+  await waitFor(() => screen.getByTitle('events'));
+  const eventItems = screen.getAllByTitle('event-list-item');
 
   expect(eventItems).toHaveLength(1);
   expect(eventItems[0]).toHaveTextContent(

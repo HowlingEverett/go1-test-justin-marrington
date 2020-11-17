@@ -11,6 +11,7 @@ import { fetchEvents } from '../../api';
 import TitleQueryField from './title-query-field';
 import LocationQueryField from './location-query-field';
 import DateQueryFields from './date-query-fields';
+import EventListItem from './event-list-item';
 
 const EventsList = ({ debounce }) => {
   const {
@@ -32,7 +33,7 @@ const EventsList = ({ debounce }) => {
     };
 
     fetchEventsData();
-  }, [filters]);
+  }, [filters, dispatch]);
 
   return (
     <div>
@@ -58,11 +59,11 @@ const EventsList = ({ debounce }) => {
       <div>
         {isFetching && <span>{'Loading events'}</span>}
         {events.length > 0 && (
-          <ul>
-            {events.map((event) => (
-              <li key={event.Title + event.Time.toString()}>{event.Title}</li>
+          <div title="events">
+            {events.map((event, index) => (
+              <EventListItem key={index} event={event} />
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>

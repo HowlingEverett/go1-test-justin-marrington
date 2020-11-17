@@ -11,12 +11,9 @@ import {
 
 const ComponentUnderTest = () => {
   const [state, dispatch] = useReducer(eventsReducer, initialState);
-  const contextValue = useMemo(() => {
-    return { state, dispatch };
-  }, [state, dispatch]);
 
   return (
-    <EventsContext.Provider value={contextValue}>
+    <EventsContext.Provider value={{ state, dispatch }}>
       <Routes />
     </EventsContext.Provider>
   );
