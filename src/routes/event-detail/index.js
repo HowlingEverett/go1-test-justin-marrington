@@ -33,7 +33,7 @@ const EventDetail = () => {
     if (!activeEvent) {
       fetchEventData();
     }
-  }, [eventId, events, activeEvent, dispatch]);
+  }, [eventId, events, dispatch]);
 
   return (
     <div title="event detail">
