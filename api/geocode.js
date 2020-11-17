@@ -1,4 +1,4 @@
-import MOCK_CANDIDATES from '../mock-data/geocode-candidates';
+const MOCK_CANDIDATES = require('../mock-data/geocode-candidates');
 
 module.exports.geocode = (req, res) => {
   // FIXME: replace mock code with Pelias proxy once it's going
