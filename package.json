@@ -9,6 +9,7 @@
     "axios": "^0.21.0",
     "express": "^4.17.1",
     "lodash": "^4.17.20",
+    "mongodb": "^3.6.3",
     "react": "^17.0.1",
     "react-autosuggest": "^10.0.3",
     "react-datepicker": "^3.3.0",

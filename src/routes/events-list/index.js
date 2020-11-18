@@ -49,7 +49,7 @@ const EventsList = ({ debounce }) => {
         debounce={debounce}
         handleAddressSelected={(address) => {
           const { latitude, longitude } = address.coordinates;
-          dispatch(setFilter('coordinates', [latitude, longitude].join(',')));
+          dispatch(setFilter('coordinates', [longitude, latitude].join(',')));
         }}
       />
 

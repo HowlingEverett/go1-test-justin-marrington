@@ -16,7 +16,7 @@ const EventDetail = () => {
   } = useContext(EventsContext);
   const { eventId } = useParams();
 
-  const activeEvent = events.find((event) => event.id === eventId);
+  const activeEvent = events.find((event) => event._id === eventId);
 
   useEffect(() => {
     const fetchEventData = async () => {
@@ -43,9 +43,9 @@ const EventDetail = () => {
       {isFetching && <span>{'Loading events'}</span>}
       {activeEvent && (
         <>
-          <h2>{activeEvent.Title}</h2>
+          <h2>{activeEvent.title}</h2>
 
-          <img url={activeEvent.Image} alt="Event detail" />
+          <img url={activeEvent.image} alt="Event detail" />
 
           <div title="event date">
             <strong>Event date: </strong>
@@ -54,7 +54,7 @@ const EventDetail = () => {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
-            }).format(new Date(activeEvent.Time))}
+            }).format(new Date(activeEvent.time))}
           </div>
         </>
       )}

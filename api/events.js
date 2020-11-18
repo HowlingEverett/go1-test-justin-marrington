@@ -1,57 +1,93 @@
-const mockEvents = require('../mock-data/events');
+const { filterEvents, getEvent } = require('../mock-data/database');
 
 module.exports.list = async (req, res) => {
-  const filteredEvents = await filterPipeline({
-    events: mockEvents,
-    params: req.query,
-  });
+  const filteredEvents = await filterPipeline({ params: req.query });
 
   res.json({ events: filteredEvents });
 };
 
 module.exports.show = async (req, res) => {
-  const event = mockEvents.find((e) => e.id === req.params.eventId);
+  const event = getEvent(req.params.eventId);
 
   res.json({ event });
 };
 
-const filterPipeline = ({ events, params = {} }) => {
-  return filterByTitle({ events, params })
+const filterPipeline = ({ databaseQuery, params }) => {
+  return filterByTitle({ databaseQuery, params })
     .then(filterByLocation)
-    .then(filterByTime);
+    .then(filterByTime)
+    .then(executeQuery);
 };
 
-const filterByTitle = ({ events, params }) => {
+const filterByTitle = ({ databaseQuery, params }) => {
   const { q: titleFilter } = params;
+  const query = databaseQuery || { $and: [] };
 
-  // TODO: replace in-memory filtering with database query
-  const filteredEvents =
-    titleFilter !== undefined
-      ? events.filter((event) =>
-          event.Title.toLowerCase().includes(titleFilter.toLowerCase())
-        )
-      : events;
-
-  return Promise.resolve({ events: filteredEvents, params });
+  const filteredQuery = titleFilter
+    ? {
+        ...query,
+        $and: [...query.$and, { title: new RegExp(titleFilter) }],
+      }
+    : databaseQuery;
+  return Promise.resolve({ databaseQuery: filteredQuery, params });
 };
 
-// TODO: implement geo-spatial location filter
-const filterByLocation = ({ events, params }) => {
-  return Promise.resolve({ events, params });
+const filterByLocation = ({ databaseQuery, params }) => {
+  const { coordinates } = params;
+
+  if (coordinates) {
+    const query = databaseQuery || { $and: [] };
+    const [longitude, latitude] = coordinates.split(',').map(parseFloat);
+    const filteredQuery = {
+      ...query,
+      $and: [
+        ...query.$and,
+        {
+          location: {
+            $near: {
+              $geometry: {
+                type: 'Point',
+                coordinates: [longitude, latitude],
+              },
+              $maxDistance: 20000,
+            },
+          },
+        },
+      ],
+    };
+    return Promise.resolve({ databaseQuery: filteredQuery, params });
+  } else {
+    return Promise.resolve({ databaseQuery, params });
+  }
 };
 
-const filterByTime = ({ events, params }) => {
+const filterByTime = ({ databaseQuery, params }) => {
   const { between } = params;
+
   if (between) {
+    const query = databaseQuery || { $and: [] };
     const [start, end] = between
       .split(',')
       .map((dateString) => new Date(dateString.trim()));
-    const filteredEvents = events.filter((event) => {
-      const eventTime = new Date(event.Time);
-      return eventTime >= start && eventTime <= end;
-    });
-    return Promise.resolve(filteredEvents);
+
+    const filteredQuery = {
+      ...query,
+      $and: [
+        ...query.$and,
+        {
+          time: {
+            $gte: start,
+            $lte: end,
+          },
+        },
+      ],
+    };
+    return Promise.resolve({ databaseQuery: filteredQuery, params });
   } else {
-    return Promise.resolve(events);
+    return Promise.resolve({ databaseQuery, params });
   }
+};
+
+const executeQuery = async ({ databaseQuery }) => {
+  return await filterEvents(databaseQuery);
 };
