@@ -1,6 +1,7 @@
 const axios = require('axios');
 
-const peliasPath = process.env.PELIAS_ROOT || 'http://localhost:4000';
+const peliasPath =
+  process.env.PELIAS_ROOT || 'http://pelias_api.pelias_default:4000';
 
 module.exports.geocode = async (req, res, next) => {
   const autocompleteUrl = `${peliasPath}/v1/autocomplete`;

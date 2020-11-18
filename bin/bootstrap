@@ -1,0 +1,26 @@
+#!/bin/bash
+set -e
+
+# Set up Pelias Australia project
+mkdir pelias
+cd pelias
+
+git clone https://github.com/pelias/docker.git && cd docker
+sudo ln -s "$(pwd)/pelias" /usr/local/bin/pelias
+
+cd projects/australia
+
+mkdir ./data
+sed -i '/DATA_DIR/d' .env
+echo 'DATA_DIR=./data' >> .env
+
+pelias compose pull
+pelias elastic start
+pelias elastic wait
+pelias elastic create
+pelias download all
+pelias prepare all
+pelias import all
+pelias compose up
+
+cd ../../../
