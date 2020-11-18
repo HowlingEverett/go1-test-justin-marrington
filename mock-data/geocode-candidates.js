@@ -1,6 +1,9 @@
 module.exports = [
   {
-    coordinates: [153.041397, -27.45231],
+    coordinates: {
+      latitude: -27.45231,
+      longitude: 153.041397,
+    },
     address: {
       addressOne: '10 Stratton St',
       addressTwo: 'Unit 1205',

@@ -1,8 +1,48 @@
-const MOCK_CANDIDATES = require('../mock-data/geocode-candidates');
+const axios = require('axios');
 
-module.exports.geocode = (req, res) => {
-  // FIXME: replace mock code with Pelias proxy once it's going
-  return res.json({
-    candidates: MOCK_CANDIDATES,
-  });
+const peliasPath = process.env.PELIAS_ROOT || 'http://localhost:4000';
+
+module.exports.geocode = async (req, res, next) => {
+  const autocompleteUrl = `${peliasPath}/v1/autocomplete`;
+  const addressFragment = req.query.address;
+  try {
+    const response = await axios.get(autocompleteUrl, {
+      params: { text: addressFragment },
+    });
+    const candidates = response.data.features.map(mapCandidate);
+    return res.json({ candidates });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const mapCandidate = (candidate) => {
+  const {
+    geometry: { coordinates },
+    properties: {
+      street,
+      housenumber,
+      postalcode: postalCode,
+      locality,
+      region,
+      country,
+      unit,
+      unit_type: unitType,
+    },
+  } = candidate;
+  const [longitude, latitude] = coordinates;
+  return {
+    coordinates: {
+      latitude,
+      longitude,
+    },
+    address: {
+      addressOne: `${housenumber} ${street}`,
+      addressTwo: unit && unitType && `${unitType} ${unit}`,
+      locality,
+      region,
+      postalCode,
+      country,
+    },
+  };
 };

@@ -47,9 +47,10 @@ const EventsList = ({ debounce }) => {
 
       <LocationQueryField
         debounce={debounce}
-        handleAddressSelected={(address) =>
-          dispatch(setFilter('coordinates', address.coordinates.join(',')))
-        }
+        handleAddressSelected={(address) => {
+          const { latitude, longitude } = address.coordinates;
+          dispatch(setFilter('coordinates', [latitude, longitude].join(',')));
+        }}
       />
 
       <DateQueryFields

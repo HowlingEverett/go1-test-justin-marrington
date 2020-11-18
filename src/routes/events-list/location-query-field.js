@@ -1,17 +1,18 @@
 import debounceCallback from 'lodash/debounce';
+import compact from 'lodash/compact';
 import Autosuggest from 'react-autosuggest';
 import React, { useState } from 'react';
 
 import { geocode } from '../../api';
 
 const joinedAddress = ({ address }) =>
-  [
+  compact([
     address.addressTwo,
     address.addressOne,
     address.locality,
     address.region,
     address.postalCode,
-  ].join(', ');
+  ]).join(', ');
 
 const getSuggestionValue = (suggestion) => suggestion;
 
