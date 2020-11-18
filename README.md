@@ -1,70 +1,49 @@
-# Getting Started with Create React App
+# Go1 Full-stack Developer Test - Justin Marrington
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is my implementation for Go1's full-stack developer test.
 
-## Available Scripts
+The basic application is a Node.js/Express API server, backed by MongoDB, with
+Pelias for address geocoding and autofill. The UI is built in React, bootstrapped
+with create-react-app.
 
-In the project directory, you can run:
+## Getting started
 
-### `yarn start`
+This test application runs as a set of bridged docker containers.
+To get started, first bootstrap the Pelias geocoder containers, then start
+the web application container.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```bash
+# Sets up the Pelias project and bootstraps Australian address data
+# WARNING: this will take a while, and you should give it as much RAM and CPU
+# as you can. My 64GB 10-core machine took about 60 minutes to index all of
+# the address data into elasticsearch
+bin/bootstrap
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+# Builds and starts the web application
+docker-compose up -d
+```
 
-### `yarn test`
+Once the application is running in Docker, access the UI via `http://localhost:3080`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Reviewing the Code
 
-### `yarn build`
+## Running the tests
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+There are unit tests and integration tests for both the API endpoints and React
+UI. You can run both suites via yarn - no need to run in docker, since the
+external dependencies are mocked in test. Tests are written at the integration
+level where possible, with Jest + supertest on the server, and
+Jest + react-testing-library on the client.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+yarn test
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Coverage
 
-### `yarn eject`
+Generate a coverage report for my test coverage via Jest's test coverage
+reporter.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+yarn test -- --coverage
+```
