@@ -33,7 +33,7 @@ const EventsList = ({ debounce }) => {
     };
 
     fetchEventsData();
-  }, [filters, dispatch]);
+  }, [filters]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>

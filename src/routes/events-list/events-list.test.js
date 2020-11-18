@@ -97,7 +97,9 @@ test('filters events by case-insensitive title filter', async () => {
 
   fireEvent.change(searchInput, { target: { value: 'basics' } });
   await waitFor(() => screen.getByText('Loading events'));
-  await waitFor(() => screen.getByTitle('events'));
+  await waitFor(() => {
+    expect(screen.queryByText('Loading events')).not.toBeInTheDocument();
+  });
   eventItems = screen.getAllByTitle('event-list-item');
 
   expect(eventItems).toHaveLength(1);
@@ -115,7 +117,9 @@ test('filters events by selected address candidate', async () => {
   fireEvent.click(candidate);
 
   await waitFor(() => screen.getByText('Loading events'));
-  await waitFor(() => screen.getByTitle('events'));
+  await waitFor(() => {
+    expect(screen.queryByText('Loading events')).not.toBeInTheDocument();
+  });
   const eventItems = screen.getAllByTitle('event-list-item');
 
   expect(eventItems).toHaveLength(1);
@@ -136,7 +140,9 @@ test('filters events by selected date range', async () => {
   fireEvent.change(endDateInput, { target: { value: '23/03/2021' } });
 
   await waitFor(() => screen.getByText('Loading events'));
-  await waitFor(() => screen.getByTitle('events'));
+  await waitFor(() => {
+    expect(screen.queryByText('Loading events')).not.toBeInTheDocument();
+  });
   const eventItems = screen.getAllByTitle('event-list-item');
 
   expect(eventItems).toHaveLength(1);

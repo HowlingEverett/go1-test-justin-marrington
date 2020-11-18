@@ -11,7 +11,7 @@ const DateQueryFields = ({ handleDateSelected = () => {} }) => {
     if (start && end) {
       handleDateSelected([start.toISOString(), end.toISOString()].join(','));
     }
-  }, [start, end]);
+  }, [start, end]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>

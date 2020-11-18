@@ -1,4 +1,4 @@
-import React, { useMemo, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import './App.css';
@@ -11,13 +11,10 @@ import {
 
 function App() {
   const [state, dispatch] = useReducer(eventsReducer, initialState);
-  const contextValue = useMemo(() => {
-    return { state, dispatch };
-  }, [state, dispatch]);
 
   return (
     <Router>
-      <EventsContext.Provider value={contextValue}>
+      <EventsContext.Provider value={{ state, dispatch }}>
         <div className="App">
           <Routes />
         </div>
